@@ -1,28 +1,30 @@
 package ro.mycode.managerapi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.springframework.cglib.core.Local;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name="Book")
 @Table(name="books")
-
+//cu ajutorul builder putem adauga cari in managerApiApplication
+@SuperBuilder
 public class Book implements  Comparable<Book>{
 
     @Id
-    @SequenceGenerator(name="book-sequence",sequenceName = "book-sequence",allocationSize = 1)
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "book-sequence")
+    @SequenceGenerator(name="book_sequence",sequenceName = "book_sequence",allocationSize = 1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "book_sequence")
     private Long id;
 
-    @Column(name="student_id",nullable = false)
-    @Size(min=1,message = "Id must be min 1")
-    private Long studentId;
 
     @Column(name="book_name",nullable = false)
     @NotBlank(message = "string field must not be the empty string")
@@ -30,8 +32,17 @@ public class Book implements  Comparable<Book>{
 
 
     @Column(name="created_at",nullable = false)
-    @Min(value=1890,message = "The book have to be created after 1890")
-    private String createdAt;
+    private LocalDate createdAt;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "student_id",
+            referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "user_id_fk")
+
+    )
+    @JsonBackReference
+    private Student student;
 
 
     @Override
