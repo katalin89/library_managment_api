@@ -1,28 +1,74 @@
 package ro.mycode.managerapi.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name="Student")
 @Table(name="students")
-
+@SuperBuilder
 public class Student implements Comparable<Student>{
    @Id
-   @SequenceGenerator(name="student-sequence",sequenceName = "student-sequence",allocationSize = 1)
-   @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "student-sequence")
+   @SequenceGenerator(name="student_sequence",sequenceName = "student_sequence",allocationSize = 1)
+   @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "student_sequence")
 
    private Long id;
 
-   @Column(name = "firstName",nullable = false)
-   @Size(min=2)
+   @Column(name = "first_name",nullable = false)
+   @Size(min=2,message = "Name must have min two caracters")
+   private String firstName;
 
+   @Column(name="lastName",nullable = false)
+   @NotBlank(message="Field must not be the empty string")
+   private String lastName;
+
+   @Column(name="email",nullable = false)
+  @Email(message = "That a string field must be a valid email address.")
+   private String email;
+
+   @Column(name="age",nullable = false)
+   @Min(value = 18,message = "A student must be min 18 years ")
+   private int age;
+
+   @Override
+   public  boolean equals(Object o){
+       Student student=(Student) o;
+       return  this.age==student.age;
+   }
+
+    @Override
     public int compareTo(Student o) {
         return 0;
     }
+
+    @OneToMany(//un student este mapat la mai multe carti
+            mappedBy = "student",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
+    )
+    @JsonManagedReference
+    @Builder.Default
+    List<Book> books = new ArrayList<>();
+
+    //addBook
+
+
+    public void addBook(Book book){
+        this.books.add(book);
+        book.setStudent(this);//studentul va avea bookul respectiv
+    }
+
+    //eraseBook
 }
