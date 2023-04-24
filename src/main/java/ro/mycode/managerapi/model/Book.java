@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.springframework.cglib.core.Local;
 
@@ -18,7 +19,7 @@ import java.time.LocalDate;
 @Table(name="books")
 //cu ajutorul builder putem adauga cari in managerApiApplication
 @SuperBuilder
-public class Book implements  Comparable<Book>{
+public class  Book implements  Comparable<Book>{
 
     @Id
     @SequenceGenerator(name="book_sequence",sequenceName = "book_sequence",allocationSize = 1)
@@ -27,7 +28,7 @@ public class Book implements  Comparable<Book>{
 
 
     @Column(name="book_name",nullable = false)
-    @NotBlank(message = "string field must not be the empty string")
+    @NotBlank(message = "string field cannot be an empty string")
     private String bookName;
 
 
@@ -42,11 +43,17 @@ public class Book implements  Comparable<Book>{
 
     )
     @JsonBackReference
+    @ToString.Exclude
     private Student student;
-
 
     @Override
     public int compareTo(Book o) {
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        Book book=(Book)o;
+        return this.bookName==book.bookName;
     }
 }

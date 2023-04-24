@@ -3,6 +3,7 @@ package ro.mycode.managerapi.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import ro.mycode.managerapi.exceptions.BookNotFoundException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -15,37 +16,37 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name="Student")
-@Table(name="students")
+@Entity(name = "Student")
+@Table(name = "students")
 @SuperBuilder
-public class Student implements Comparable<Student>{
-   @Id
-   @SequenceGenerator(name="student_sequence",sequenceName = "student_sequence",allocationSize = 1)
-   @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "student_sequence")
+public class Student implements Comparable<Student> {
+    @Id
+    @SequenceGenerator(name = "student_sequence", sequenceName = "student_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_sequence")
 
-   private Long id;
+    private Long id;
 
-   @Column(name = "first_name",nullable = false)
-   @Size(min=2,message = "Name must have min two caracters")
-   private String firstName;
+    @Column(name = "first_name", nullable = false)
+    @Size(min = 2, message = "Name must have min two caracters")
+    private String firstName;
 
-   @Column(name="lastName",nullable = false)
-   @NotBlank(message="Field must not be the empty string")
-   private String lastName;
+    @Column(name = "lastName", nullable = false)
+    @NotBlank(message = "Field must not be the empty string")
+    private String lastName;
 
-   @Column(name="email",nullable = false)
-  @Email(message = "That a string field must be a valid email address.")
-   private String email;
+    @Column(name = "email", nullable = false)
+    @Email(message = "That  string field must be a valid email address.")
+    private String email;
 
-   @Column(name="age",nullable = false)
-   @Min(value = 18,message = "A student must be min 18 years ")
-   private int age;
+    @Column(name = "age", nullable = false)
+    @Min(value = 18, message = "A student must be min 18 years ")
+    private int age;
 
-   @Override
-   public  boolean equals(Object o){
-       Student student=(Student) o;
-       return  this.age==student.age;
-   }
+    @Override
+    public boolean equals(Object o) {
+        Student student = (Student) o;
+        return this.age == student.age;
+    }
 
     @Override
     public int compareTo(Student o) {
@@ -65,10 +66,35 @@ public class Student implements Comparable<Student>{
     //addBook
 
 
-    public void addBook(Book book){
+    public void addBook(Book book) {
         this.books.add(book);
         book.setStudent(this);//studentul va avea bookul respectiv
     }
 
     //eraseBook
+
+    //sa sterga dupa id
+    public void deleteBook(Book book) throws BookNotFoundException {
+        if (exists(book.getId())) {
+
+            this.books.remove(book.getBookName());
+            book.setStudent(null);
+        } else
+            throw new BookNotFoundException();
+        // trow exception if book not exists
+
+
+
+    }
+
+
+    //findBook
+    public boolean exists(Long id) {
+        for (Book o : books) {
+            if (o.getId() == id) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
