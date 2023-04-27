@@ -49,20 +49,20 @@ public class ManagerApiApplication {
 					.createdAt(LocalDate.of(2001,4,30))
 					.build();
 
-			Student student = studentRepo.findById(2L).get();
+		//	Student student = studentRepo.findById(2L).get();
 
 
 
-			student.addBook(book);
-			student.addBook(book2);
-			student.addBook(book3);
-			student.addBook(book4);
-			student.addBook(book5);
-
-
-			studentRepo.saveAndFlush(student);
-
-
+//			student.addBook(book);
+//			student.addBook(book2);
+//			student.addBook(book3);
+//			student.addBook(book4);
+//			student.addBook(book5);
+//
+//
+//			studentRepo.saveAndFlush(student);
+//
+//
 
 
 
