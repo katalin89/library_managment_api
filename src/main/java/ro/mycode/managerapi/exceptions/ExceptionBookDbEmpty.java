@@ -2,8 +2,8 @@ package ro.mycode.managerapi.exceptions;
 
 import static ro.mycode.managerapi.constatnts.Constants.EMPTY_DATABASE_EXCEPTION;
 
-public class ExceptieBookDbEmpty extends RuntimeException{
-    public  ExceptieBookDbEmpty(){
+public class ExceptionBookDbEmpty extends RuntimeException{
+    public ExceptionBookDbEmpty(){
         super(EMPTY_DATABASE_EXCEPTION);
     }
 }

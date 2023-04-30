@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.mycode.managerapi.dto.AddBookRequest;
 import ro.mycode.managerapi.model.Book;
+import ro.mycode.managerapi.model.Student;
 import ro.mycode.managerapi.repository.BookRepo;
 import ro.mycode.managerapi.service.StudentService;
 
@@ -16,16 +17,21 @@ import java.util.Map;
 @RequestMapping("/api/v1/students/")
 @CrossOrigin
 public class StudentResource {
-
-
     private StudentService studentService;
-    private final BookRepo bookRepo;
-
-    private StudentResource(StudentService studentService,
-                            BookRepo bookRepo) {
-
+    private StudentResource(StudentService studentService) {
         this.studentService = studentService;
-        this.bookRepo = bookRepo;
+    }
+
+    @GetMapping("all")
+    public ResponseEntity<List<Student>> getAllStudents(){
+        List<Student> allStudents= studentService.getAllStudents();
+        return new ResponseEntity<>(allStudents, HttpStatus.OK);
+    }
+
+    @PostMapping("add")
+    public ResponseEntity addStudent( @RequestBody Student student){
+        studentService.addStudent(student);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("addBook")
@@ -34,13 +40,10 @@ public class StudentResource {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-
-
-
-    @GetMapping("all")
-    public ResponseEntity<List<String>> getAllBooks() {
-        List<String> allBooks = studentService.getAllBooks();
-        return new ResponseEntity<>(allBooks, HttpStatus.OK);
+    @GetMapping("allNames")
+    public ResponseEntity<List<String>> getAllStudentsName() {
+        List<String> allStudentsName= studentService.getAllStudentsName();
+        return new ResponseEntity<>(allStudentsName, HttpStatus.OK);
     }
 
     @GetMapping("studentsBook/{id}")
@@ -50,13 +53,9 @@ public class StudentResource {
     }
 
     @DeleteMapping("deleteByBookName/{id}/{name}")
-    ResponseEntity deleteByBookName(@PathVariable Map<Long, String> pathVarsMap){
+    ResponseEntity<String> deleteByBookName(@PathVariable Map<Long, String> pathVarsMap){
        this.studentService.deleteBookByBookName(Long.parseLong(pathVarsMap.get("id")),pathVarsMap.get("name"));
-
-       String id = pathVarsMap.get("id");
-       String name = pathVarsMap.get("name");
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(pathVarsMap.get("id"),HttpStatus.ACCEPTED);
     }
-
 
 }

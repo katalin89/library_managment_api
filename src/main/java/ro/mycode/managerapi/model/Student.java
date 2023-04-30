@@ -77,7 +77,7 @@ public class Student implements Comparable<Student> {
     public void deleteBook(Book book) throws BookNotFoundException {
         if (exists(book.getId())) {
 
-            this.books.remove(book.getBookName());
+            this.books.remove(book);
             book.setStudent(null);
         } else
             throw new BookNotFoundException();

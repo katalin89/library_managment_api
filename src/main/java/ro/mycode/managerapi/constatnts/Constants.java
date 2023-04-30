@@ -8,5 +8,14 @@ public class Constants {
     public  static  final String BOOK_NOT_FOUND_EXCEPTION="Book not exists";
 
     public  static  final String STUDENT_NOT_HAS_THE_BOOK="The student hasn't that book";
+
+    public static final String STUDENT_EMPTY_DATABASE_EXCEPTION="List of student is empty";
+
+    public  static final String STUDENT_ALREADY_HAS_THE_BOOK="Student alredy has the book";
+
+    public static  final String NOT_YOUR_BOOK_EXCEPTION="Existing Book but is not yours";
+
+
+
 }
 

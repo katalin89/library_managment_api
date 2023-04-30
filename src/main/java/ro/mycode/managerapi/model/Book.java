@@ -26,7 +26,6 @@ public class  Book implements  Comparable<Book>{
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "book_sequence")
     private Long id;
 
-
     @Column(name="book_name",nullable = false)
     @NotBlank(message = "string field cannot be an empty string")
     private String bookName;
@@ -54,6 +53,8 @@ public class  Book implements  Comparable<Book>{
     @Override
     public boolean equals(Object o){
         Book book=(Book)o;
-        return this.bookName==book.bookName;
+        return this.bookName.equals(book.bookName);
     }
+
+
 }
