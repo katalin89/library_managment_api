@@ -16,6 +16,8 @@ public class Constants {
     public static  final String NOT_YOUR_BOOK_EXCEPTION="Existing Book but is not yours";
 
 
+    public static  final String NOT_A_VALID_USER="Not a valid user";
+
 
 }
 

@@ -21,20 +21,3 @@ public class UpdateDTO {
 
 }
 
-/*@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@SuperBuilder
-public class AddBookRequest {
-//ce vine don Postman
-    //antotarile ne precizeaza ca imputurile nu pot fi null sau gol
-     @NotEmpty
-     private String bookName;
-     @NonNull
-     private LocalDate createdAt;
-     @NonNull
-     private Long studentId;
-
-
-
-}*/

@@ -3,6 +3,7 @@ package ro.mycode.managerapi.service;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import ro.mycode.managerapi.dto.AddBookRequest;
+import ro.mycode.managerapi.dto.LoginDTO;
 import ro.mycode.managerapi.exceptions.*;
 import ro.mycode.managerapi.model.Book;
 import ro.mycode.managerapi.model.Student;
@@ -110,20 +111,18 @@ public class StudentService {
         studentRepo.saveAndFlush(student);
     }
 
-//    public void deleteBookByBookName(Long id,String bookName) throws BookNotFoundException {
-//        Book byName=bookRepo.findBookByBookName(bookName);
-//
-//        if(byName!=null){
-//            bookRepo.deleteBookFromStudentList(id,bookName);
-//        }
-//        else
-//            throw new   BookNotFoundException();
-//
-//
-//
-//    }
+    public  Student getUser(LoginDTO loginDTO) throws  NotAValidUserException{
+       Optional<Student> student=studentRepo.login( loginDTO.getEmail(), loginDTO.getPassword());
+        if(student.isPresent()){
+            return student.get();
+        }
+        return null;
+
+    }
 
 }
+
+
 
 
 

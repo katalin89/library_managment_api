@@ -32,5 +32,8 @@ public class BookResource {
         return new ResponseEntity<>(allBooks, HttpStatus.OK);
     }
 
+//    @DeleteMapping("deleteByBookName/{bookName}")
+
+
 
 }

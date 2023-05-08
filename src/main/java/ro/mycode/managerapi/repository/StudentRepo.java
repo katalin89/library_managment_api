@@ -9,6 +9,7 @@ import ro.mycode.managerapi.model.Student;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface StudentRepo extends JpaRepository<Student, Long> {
@@ -20,7 +21,20 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
     @Query("select b   from Book b where b.student.id=?1 and b.bookName=?2")
     List<Book>studentHaveBook(Long id,String bookName);
 
-//    @Query("select b from Book b where b.student.id=?1")
-//    List<Book> getAllStudentsBook(Long id);
+    @Transactional
+    @Modifying
+    @Query("delete from Student s where s.firstName=?1 and s.lastName=?2")
+    void deleteByName(String firstName,String lastName);
+
+    @Transactional
+    @Modifying
+    @Query("delete from Student s where s.id=?1")
+    void deleteById(Long id);
+
+
+    @Query("select s from Student s where s.email=?1 and s.password=?2" )
+    Optional<Student> login(String email, String password);
+
+
 
 }

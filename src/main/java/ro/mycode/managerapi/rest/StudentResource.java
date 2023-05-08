@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.mycode.managerapi.dto.AddBookRequest;
+import ro.mycode.managerapi.dto.LoginDTO;
 import ro.mycode.managerapi.model.Book;
 import ro.mycode.managerapi.model.Student;
 import ro.mycode.managerapi.repository.BookRepo;
@@ -35,6 +36,7 @@ public class StudentResource {
     }
 
     @PostMapping("addBook")
+    //@RequestBody trimite informatia prin Body folosim de AddBookRequest DTO
     public ResponseEntity<Void> addBook(@Valid @RequestBody AddBookRequest book) {
         studentService.addBookToStudent(book);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -51,11 +53,18 @@ public class StudentResource {
         List<Book> allStudntsBooks = studentService.getAllStudentsBook(id);
         return new ResponseEntity<>(allStudntsBooks, HttpStatus.OK);
     }
-
+    //@PathVariable trimite prin url
     @DeleteMapping("deleteByBookName/{id}/{name}")
+
     ResponseEntity<String> deleteByBookName(@PathVariable Map<Long, String> pathVarsMap){
        this.studentService.deleteBookByBookName(Long.parseLong(pathVarsMap.get("id")),pathVarsMap.get("name"));
         return new ResponseEntity<>(pathVarsMap.get("id"),HttpStatus.ACCEPTED);
     }
 
+    @PostMapping("login")
+    public  ResponseEntity<Student>getUser(@Valid @RequestBody LoginDTO user){
+        return new ResponseEntity(studentService.getUser(user),HttpStatus.OK);
+    }
+
 }
+

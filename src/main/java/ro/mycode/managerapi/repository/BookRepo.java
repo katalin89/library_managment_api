@@ -38,7 +38,19 @@ public interface BookRepo extends JpaRepository<Book,Long> {
     List<Book> getAllStudentsBook(Long id);
 
 
+
+
 //SELECT * FROM employee WHERE name="employee name";
+
+   // @Transactional
+//    @Modifying
+//    @Query("delete from Book b where b.bookName like ?1")
+//    void deleteBookByBookName(String bookName);
+//
+//    @Transactional
+//    @Modifying
+//    @Query("delete from Book b where b.id=?1")
+//    void deleteById(Long id);
     Book findBookByBookName(String bookName);
 
 }
