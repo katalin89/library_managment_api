@@ -35,6 +35,9 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
     @Query("select s from Student s where s.email=?1 and s.password=?2" )
     Optional<Student> login(String email, String password);
 
+  @Query("select b from Book b where b.student.id=?1")
+  List<Book> getAllStudentsBook(Long id);
+
 
 
 }

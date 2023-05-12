@@ -107,6 +107,10 @@ public class StudentService {
         return studentRepo.findAll();
     }
 
+    public List<Book> getAllStudentsBooks(Long id) {
+        return studentRepo.getAllStudentsBook(id);
+    }
+
     public void addStudent(Student student) {
         studentRepo.saveAndFlush(student);
     }
@@ -116,10 +120,23 @@ public class StudentService {
         if(student.isPresent()){
             return student.get();
         }
-        return null;
+        throw  new StudentNotFoundException();
 
     }
 
+    public void deleteBookByBookId(long id) {
+
+        Optional byName = bookRepo.findById(id);
+
+        if (byName.isPresent()){
+            throw new BookNotFoundException();
+        }
+        else
+        {
+            bookRepo.deleteById(id);
+            bookRepo.flush();
+        }
+    }
 }
 
 

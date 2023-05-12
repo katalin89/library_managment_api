@@ -29,6 +29,9 @@ public class StudentResource {
         return new ResponseEntity<>(allStudents, HttpStatus.OK);
     }
 
+
+
+
     @PostMapping("add")
     public ResponseEntity addStudent( @RequestBody Student student){
         studentService.addStudent(student);
@@ -43,27 +46,34 @@ public class StudentResource {
     }
 
     @GetMapping("allNames")
-    public ResponseEntity<List<String>> getAllStudentsName() {
+    public ResponseEntity<List<String>> getAllStudentsName(@Valid @RequestBody Long id) {
         List<String> allStudentsName= studentService.getAllStudentsName();
         return new ResponseEntity<>(allStudentsName, HttpStatus.OK);
     }
 
-    @GetMapping("studentsBook/{id}")
-    public ResponseEntity<List<Book>> getAllStudentsBook(@PathVariable Long id) {
-        List<Book> allStudntsBooks = studentService.getAllStudentsBook(id);
-        return new ResponseEntity<>(allStudntsBooks, HttpStatus.OK);
+//    @GetMapping("studentsBook/{id}")
+//    public ResponseEntity<List<Book>> getAllStudentsBook(@PathVariable Long id) {
+//        List<Book> allStudntsBooks = studentService.getAllStudentsBook(id);
+//        return new ResponseEntity<>(allStudntsBooks, HttpStatus.OK);
+//    }
+
+    @GetMapping("allStudentsBooks/{id}")
+    public ResponseEntity<List<Book>> getAllStudentsBooks(@PathVariable Long id) {
+        List<Book> allBooks = studentService.getAllStudentsBook(id);
+        return new ResponseEntity<>(allBooks, HttpStatus.OK);
     }
-    //@PathVariable trimite prin url
-    @DeleteMapping("deleteByBookName/{id}/{name}")
+
+   // @PathVariable trimite prin url
+    @DeleteMapping("deleteByBookName/{id}")
 
     ResponseEntity<String> deleteByBookName(@PathVariable Map<Long, String> pathVarsMap){
-       this.studentService.deleteBookByBookName(Long.parseLong(pathVarsMap.get("id")),pathVarsMap.get("name"));
+       this.studentService.deleteBookByBookId(Long.parseLong(pathVarsMap.get("id")));
         return new ResponseEntity<>(pathVarsMap.get("id"),HttpStatus.ACCEPTED);
     }
 
     @PostMapping("login")
     public  ResponseEntity<Student>getUser(@Valid @RequestBody LoginDTO user){
-        return new ResponseEntity(studentService.getUser(user),HttpStatus.OK);
+        return new ResponseEntity<>(studentService.getUser(user),HttpStatus.OK);
     }
 
 }
