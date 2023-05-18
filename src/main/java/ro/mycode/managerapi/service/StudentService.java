@@ -3,6 +3,7 @@ package ro.mycode.managerapi.service;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import ro.mycode.managerapi.dto.AddBookRequest;
+import ro.mycode.managerapi.dto.LoginDTO;
 import ro.mycode.managerapi.exceptions.*;
 import ro.mycode.managerapi.model.Book;
 import ro.mycode.managerapi.model.Student;
@@ -49,16 +50,16 @@ public class StudentService {
     @Transactional
     @Modifying
     public void deleteBookByBookName(Long studentId, String bookName) throws BookNotFoundException {
-        Book byName = bookRepo.findBookByBookName(bookName);
+        Optional<Book> byName = bookRepo.findBookByBookName(bookName);
 
-        if (byName.getStudent().getId() == studentId) {
+        if (byName.get().getId() == studentId) {
             if (byName != null) {
                 Optional<Student> optionalStudent = studentRepo.findById(studentId);
 
                 if (optionalStudent.isPresent()) {
                     Student student = optionalStudent.get();
-                    if (student.exists(byName.getId())) {
-                        student.deleteBook(byName);
+                    if (student.exists(byName.get().getId())) {
+                        student.deleteBook(byName.get());
                         studentRepo.saveAndFlush(student);
                     } else {
                         throw new StudentHaveNotThatBookException();
@@ -106,24 +107,40 @@ public class StudentService {
         return studentRepo.findAll();
     }
 
+    public List<Book> getAllStudentsBooks(Long id) {
+        return studentRepo.getAllStudentsBook(id);
+    }
+
     public void addStudent(Student student) {
         studentRepo.saveAndFlush(student);
     }
 
-//    public void deleteBookByBookName(Long id,String bookName) throws BookNotFoundException {
-//        Book byName=bookRepo.findBookByBookName(bookName);
-//
-//        if(byName!=null){
-//            bookRepo.deleteBookFromStudentList(id,bookName);
-//        }
-//        else
-//            throw new   BookNotFoundException();
-//
-//
-//
-//    }
+    public  Student getUser(LoginDTO loginDTO) throws  NotAValidUserException{
+       Optional<Student> student=studentRepo.login( loginDTO.getEmail(), loginDTO.getPassword());
+        if(student.isPresent()){
+            return student.get();
+        }
+        throw  new StudentNotFoundException();
 
+    }
+
+    public void deleteBookByBookId(long id) {
+
+        Optional byName = bookRepo.findById(id);
+
+        if (!byName.isPresent()){
+            throw new BookNotFoundException();
+        }
+        else
+        {
+            Book book = (Book) byName.get();
+            book.setStudent(null);
+            bookRepo.saveAndFlush(book);
+        }
+    }
 }
+
+
 
 
 

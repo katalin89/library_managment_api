@@ -42,6 +42,11 @@ public class Student implements Comparable<Student> {
     @Min(value = 18, message = "A student must be min 18 years ")
     private int age;
 
+
+    @Column(name="password",nullable = false)
+    @Size(min=4,message = "Password must have four characters")
+    private String password;
+
     @Override
     public boolean equals(Object o) {
         Student student = (Student) o;
