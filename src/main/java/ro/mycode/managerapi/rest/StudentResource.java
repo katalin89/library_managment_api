@@ -30,8 +30,6 @@ public class StudentResource {
     }
 
 
-
-
     @PostMapping("add")
     public ResponseEntity addStudent( @RequestBody Student student){
         studentService.addStudent(student);

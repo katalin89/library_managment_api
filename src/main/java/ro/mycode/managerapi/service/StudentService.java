@@ -50,16 +50,16 @@ public class StudentService {
     @Transactional
     @Modifying
     public void deleteBookByBookName(Long studentId, String bookName) throws BookNotFoundException {
-        Book byName = bookRepo.findBookByBookName(bookName);
+        Optional<Book> byName = bookRepo.findBookByBookName(bookName);
 
-        if (byName.getStudent().getId() == studentId) {
+        if (byName.get().getId() == studentId) {
             if (byName != null) {
                 Optional<Student> optionalStudent = studentRepo.findById(studentId);
 
                 if (optionalStudent.isPresent()) {
                     Student student = optionalStudent.get();
-                    if (student.exists(byName.getId())) {
-                        student.deleteBook(byName);
+                    if (student.exists(byName.get().getId())) {
+                        student.deleteBook(byName.get());
                         studentRepo.saveAndFlush(student);
                     } else {
                         throw new StudentHaveNotThatBookException();
@@ -128,13 +128,14 @@ public class StudentService {
 
         Optional byName = bookRepo.findById(id);
 
-        if (byName.isPresent()){
+        if (!byName.isPresent()){
             throw new BookNotFoundException();
         }
         else
         {
-            bookRepo.deleteById(id);
-            bookRepo.flush();
+            Book book = (Book) byName.get();
+            book.setStudent(null);
+            bookRepo.saveAndFlush(book);
         }
     }
 }

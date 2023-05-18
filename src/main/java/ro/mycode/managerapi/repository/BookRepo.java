@@ -9,6 +9,7 @@ import ro.mycode.managerapi.model.Book;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 //chage class to interface
 @Repository
@@ -40,17 +41,6 @@ public interface BookRepo extends JpaRepository<Book,Long> {
 
 
 
-//SELECT * FROM employee WHERE name="employee name";
-
-   // @Transactional
-//    @Modifying
-//    @Query("delete from Book b where b.bookName like ?1")
-//    void deleteBookByBookName(String bookName);
-//
-//    @Transactional
-//    @Modifying
-//    @Query("delete from Book b where b.id=?1")
-//    void deleteById(Long id);
-    Book findBookByBookName(String bookName);
+    Optional<Book>findBookByBookName(String bookName);
 
 }
