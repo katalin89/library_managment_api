@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/book/")
 @CrossOrigin
-public class BookResource {
+public abstract class BookResource {
     private BookService bookService;
 
     public BookResource(BookService bookService) {
@@ -31,6 +31,8 @@ public class BookResource {
         List<Book> allBooks= bookService.getAllBooks();
         return new ResponseEntity<>(allBooks, HttpStatus.OK);
     }
+
+
 
 //    @DeleteMapping("deleteByBookName/{bookName}")
 

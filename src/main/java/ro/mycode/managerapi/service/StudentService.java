@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import ro.mycode.managerapi.dto.AddBookRequest;
 import ro.mycode.managerapi.dto.LoginDTO;
+import ro.mycode.managerapi.dto.SignUpDTO;
 import ro.mycode.managerapi.exceptions.*;
 import ro.mycode.managerapi.model.Book;
 import ro.mycode.managerapi.model.Student;
@@ -45,7 +46,15 @@ public class StudentService {
                 throw new StudentNotFoundException();
             }
         }
+    public void deleteBookById(Long id) throws BookNotFoundException {
+        Book byId = bookRepo.findBookById(id);
 
+        if (byId != null) {
+            bookRepo.deleteById(id);
+        } else {
+            throw new BookNotFoundException();
+        }
+    }
 
     @Transactional
     @Modifying
@@ -123,8 +132,46 @@ public class StudentService {
         throw  new StudentNotFoundException();
 
     }
+    public Student addUserSignUp(SignUpDTO signUpDTO)throws  ExistingUser{
+        Optional<Student> student=studentRepo.signUp(signUpDTO.getFirstName(),signUpDTO.getLastName(),signUpDTO.getEmail(),signUpDTO.getPassword());
 
-    public void deleteBookByBookId(long id) {
+        // trebuie creat studentul din dto
+        if(!student.isPresent()){
+            Student student1=Student.builder().firstName(signUpDTO.getFirstName())
+                    .lastName(signUpDTO.getLastName())
+                    .email(signUpDTO.getEmail())
+                    .password(signUpDTO.getPassword())
+                    .build();
+
+            studentRepo.saveAndFlush(student1);
+            return student1;
+        }
+
+        throw new ExistingUser();
+   }
+
+   /*@Transactional
+    @Modifying
+    public void addBookToStudent(AddBookRequest addBookRequest) {
+        //nu verificam daca are studentul deja cartea respectiva?
+        if (studentRepo.studentHaveBook(addBookRequest.getStudentId(), addBookRequest.getBookName()).size()>0) {
+            throw new ExceptionStudentAlreadyHasTheBook();
+        }
+            Optional<Student> student = studentRepo.findById(addBookRequest.getStudentId());
+            if (student.isPresent()) {
+                Book book = Book.builder()
+                        .bookName(addBookRequest.getBookName())
+                        .createdAt(addBookRequest.getCreatedAt()).build();
+                Student student1 = student.get();
+                student1.addBook(book);
+                studentRepo.saveAndFlush(student1);
+            } else {
+
+                throw new StudentNotFoundException();
+            }
+        }*/
+
+    public void deleteBookByBookId(Long id) {
 
         Optional byName = bookRepo.findById(id);
 

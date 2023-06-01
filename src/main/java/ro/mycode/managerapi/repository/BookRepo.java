@@ -43,4 +43,6 @@ public interface BookRepo extends JpaRepository<Book,Long> {
 
     Optional<Book>findBookByBookName(String bookName);
 
+    Book findBookById(Long id);
+
 }

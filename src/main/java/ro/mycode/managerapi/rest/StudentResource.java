@@ -5,9 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.mycode.managerapi.dto.AddBookRequest;
 import ro.mycode.managerapi.dto.LoginDTO;
+import ro.mycode.managerapi.dto.SignUpDTO;
 import ro.mycode.managerapi.model.Book;
 import ro.mycode.managerapi.model.Student;
-import ro.mycode.managerapi.repository.BookRepo;
 import ro.mycode.managerapi.service.StudentService;
 
 import javax.validation.Valid;
@@ -73,6 +73,15 @@ public class StudentResource {
     public  ResponseEntity<Student>getUser(@Valid @RequestBody LoginDTO user){
         return new ResponseEntity<>(studentService.getUser(user),HttpStatus.OK);
     }
+
+    @PostMapping("signUp")
+    public  ResponseEntity<Student>getUserUp(@Valid @RequestBody SignUpDTO user){
+        return  new ResponseEntity<>(studentService.addUserSignUp(user), HttpStatus.OK);
+    }
+
+
+
+
 
 }
 

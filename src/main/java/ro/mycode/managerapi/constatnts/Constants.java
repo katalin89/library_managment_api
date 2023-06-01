@@ -18,6 +18,8 @@ public class Constants {
 
     public static  final String NOT_A_VALID_USER="Not a valid user";
 
+    public  static  final String EXISTING_USER="The user already exists";
+
 
 }
 
