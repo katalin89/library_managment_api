@@ -32,6 +32,7 @@ public class BookService {
         if (bookByBookId.isEmpty()) {
 
             throw new BookNotFoundException();
+
         } else if (book.getStudentId() != bookByBookId.get().getStudent().getId()) {
             throw new NotYourBookException();
         }

@@ -41,6 +41,9 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
   @Query("select b from Book b where b.student.id=?1")
   List<Book> getAllStudentsBook(Long id);
 
+  //
+
+
 
 
 }

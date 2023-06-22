@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import ro.mycode.managerapi.exceptions.BookNotFoundException;
+import ro.mycode.managerapi.exceptions.StudentHaveNotThatBookException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -43,8 +44,8 @@ public class Student implements Comparable<Student> {
     private int age;
 
 
-    @Column(name="password",nullable = false)
-    @Size(min=4,message = "Password must have four characters")
+    @Column(name = "password", nullable = false)
+    @Size(min = 4, message = "Password must have four characters")
     private String password;
 
     @Override
@@ -55,8 +56,15 @@ public class Student implements Comparable<Student> {
 
     @Override
     public int compareTo(Student o) {
-        return 0;
+        if (this.age > o.age) {
+            return 1;
+        }
+        if (this.age < o.age) {
+            return -1;
+        } else
+            return 0;
     }
+
 
     @OneToMany(//un student este mapat la mai multe carti
             mappedBy = "student",
@@ -89,7 +97,6 @@ public class Student implements Comparable<Student> {
         // trow exception if book not exists
 
 
-
     }
 
 
@@ -101,5 +108,16 @@ public class Student implements Comparable<Student> {
             }
         }
         return false;
+    }
+    //exceptie , functie care verifica daca studentul are cartea
+
+    public boolean studentHasTheBook(Book book){
+        for(Book b:books){
+            if(b.getStudent()== book.getStudent()){
+                return true;
+            }
+        }
+        return false;
+
     }
 }

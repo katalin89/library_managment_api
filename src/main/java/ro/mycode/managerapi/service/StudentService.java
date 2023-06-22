@@ -3,6 +3,7 @@ package ro.mycode.managerapi.service;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import ro.mycode.managerapi.dto.AddBookRequest;
+import ro.mycode.managerapi.dto.DeleteBookRequest;
 import ro.mycode.managerapi.dto.LoginDTO;
 import ro.mycode.managerapi.dto.SignUpDTO;
 import ro.mycode.managerapi.exceptions.*;
@@ -30,22 +31,23 @@ public class StudentService {
     @Modifying
     public void addBookToStudent(AddBookRequest addBookRequest) {
         //nu verificam daca are studentul deja cartea respectiva?
-        if (studentRepo.studentHaveBook(addBookRequest.getStudentId(), addBookRequest.getBookName()).size()>0) {
+        if (studentRepo.studentHaveBook(addBookRequest.getStudentId(), addBookRequest.getBookName()).size() > 0) {
             throw new ExceptionStudentAlreadyHasTheBook();
         }
-            Optional<Student> student = studentRepo.findById(addBookRequest.getStudentId());
-            if (student.isPresent()) {
-                Book book = Book.builder()
-                        .bookName(addBookRequest.getBookName())
-                        .createdAt(addBookRequest.getCreatedAt()).build();
-                Student student1 = student.get();
-                student1.addBook(book);
-                studentRepo.saveAndFlush(student1);
-            } else {
+        Optional<Student> student = studentRepo.findById(addBookRequest.getStudentId());
+        if (student.isPresent()) {
+            Book book = Book.builder()
+                    .bookName(addBookRequest.getBookName())
+                    .createdAt(addBookRequest.getCreatedAt()).build();
+            Student student1 = student.get();
+            student1.addBook(book);
+            studentRepo.saveAndFlush(student1);
+        } else {
 
-                throw new StudentNotFoundException();
-            }
+            throw new StudentNotFoundException();
         }
+    }
+
     public void deleteBookById(Long id) throws BookNotFoundException {
         Book byId = bookRepo.findBookById(id);
 
@@ -79,8 +81,7 @@ public class StudentService {
                 }
             } else
                 throw new BookNotFoundException();
-        }
-        else {
+        } else {
             throw new StudentHaveNotThatBookException();
         }
     }
@@ -112,6 +113,7 @@ public class StudentService {
         throw new ExceptionBookDbEmpty();
 
     }
+
     public List<Student> getAllStudents() {
         return studentRepo.findAll();
     }
@@ -124,20 +126,21 @@ public class StudentService {
         studentRepo.saveAndFlush(student);
     }
 
-    public  Student getUser(LoginDTO loginDTO) throws  NotAValidUserException{
-       Optional<Student> student=studentRepo.login( loginDTO.getEmail(), loginDTO.getPassword());
-        if(student.isPresent()){
+    public Student getUser(LoginDTO loginDTO) throws NotAValidUserException {
+        Optional<Student> student = studentRepo.login(loginDTO.getEmail(), loginDTO.getPassword());
+        if (student.isPresent()) {
             return student.get();
         }
-        throw  new StudentNotFoundException();
+        throw new StudentNotFoundException();
 
     }
-    public Student addUserSignUp(SignUpDTO signUpDTO)throws  ExistingUser{
-        Optional<Student> student=studentRepo.signUp(signUpDTO.getFirstName(),signUpDTO.getLastName(),signUpDTO.getEmail(),signUpDTO.getPassword());
+
+    public Student addUserSignUp(SignUpDTO signUpDTO) throws ExistingUser {
+        Optional<Student> student = studentRepo.signUp(signUpDTO.getFirstName(), signUpDTO.getLastName(), signUpDTO.getEmail(), signUpDTO.getPassword());
 
         // trebuie creat studentul din dto
-        if(!student.isPresent()){
-            Student student1=Student.builder().firstName(signUpDTO.getFirstName())
+        if (!student.isPresent()) {
+            Student student1 = Student.builder().firstName(signUpDTO.getFirstName())
                     .lastName(signUpDTO.getLastName())
                     .email(signUpDTO.getEmail())
                     .password(signUpDTO.getPassword())
@@ -148,7 +151,7 @@ public class StudentService {
         }
 
         throw new ExistingUser();
-   }
+    }
 
    /*@Transactional
     @Modifying
@@ -171,19 +174,35 @@ public class StudentService {
             }
         }*/
 
-    public void deleteBookByBookId(Long id) {
+//la stergere trebuie folosit transactional
+    @Transactional
+    public void deleteBookByBookId( DeleteBookRequest deleteBookResponse) {
 
-        Optional byName = bookRepo.findById(id);
+        Optional<Student>student=studentRepo.findById(deleteBookResponse.getStudentId());
+        Optional<Book>book=bookRepo.findById(deleteBookResponse.getId());
 
-        if (!byName.isPresent()){
+        if(!student.isPresent()){
+            throw new StudentNotFoundException();
+
+        }
+
+        if(!book.isPresent()){
             throw new BookNotFoundException();
         }
-        else
-        {
-            Book book = (Book) byName.get();
-            book.setStudent(null);
-            bookRepo.saveAndFlush(book);
-        }
+
+
+        Student student1 = student.get();
+
+        Book book1 = book.get();
+
+
+        student1.deleteBook(book1);
+
+
+
+        studentRepo.saveAndFlush(student1);
+
+
     }
 }
 

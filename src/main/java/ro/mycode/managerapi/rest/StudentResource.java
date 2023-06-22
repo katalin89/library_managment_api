@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.mycode.managerapi.dto.AddBookRequest;
+import ro.mycode.managerapi.dto.DeleteBookRequest;
 import ro.mycode.managerapi.dto.LoginDTO;
 import ro.mycode.managerapi.dto.SignUpDTO;
 import ro.mycode.managerapi.model.Book;
@@ -12,7 +13,6 @@ import ro.mycode.managerapi.service.StudentService;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/students/")
@@ -61,12 +61,12 @@ public class StudentResource {
         return new ResponseEntity<>(allBooks, HttpStatus.OK);
     }
 
-   // @PathVariable trimite prin url
-    @DeleteMapping("deleteByBookName/{id}")
-
-    ResponseEntity<String> deleteByBookName(@PathVariable Map<Long, String> pathVarsMap){
-       this.studentService.deleteBookByBookId(Long.parseLong(pathVarsMap.get("id")));
-        return new ResponseEntity<>(pathVarsMap.get("id"),HttpStatus.ACCEPTED);
+    //@PathVariable
+    @DeleteMapping("deleteByBookName")
+    ResponseEntity<String> deleteByBookName(@RequestBody DeleteBookRequest deleteBookRequest){
+       //this.studentService.deleteBookByBookId(deleteBookRequest.getStudentId());
+        this.studentService.deleteBookByBookId(deleteBookRequest);
+        return new ResponseEntity<>("ok",HttpStatus.ACCEPTED);
     }
 
     @PostMapping("login")
@@ -78,6 +78,7 @@ public class StudentResource {
     public  ResponseEntity<Student>getUserUp(@Valid @RequestBody SignUpDTO user){
         return  new ResponseEntity<>(studentService.addUserSignUp(user), HttpStatus.OK);
     }
+
 
 
 

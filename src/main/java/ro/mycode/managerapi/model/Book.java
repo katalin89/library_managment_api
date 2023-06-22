@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity(name="Book")
 @Table(name="books")
-//cu ajutorul builder putem adauga cari in managerApiApplication
+//cu ajutorul builder putem adauga carti in managerApiApplication
 @SuperBuilder
 public class  Book implements  Comparable<Book>{
 
@@ -34,7 +34,7 @@ public class  Book implements  Comparable<Book>{
     @Column(name="created_at",nullable = false)
     private LocalDate createdAt;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(
             name = "student_id",
             referencedColumnName = "id",
@@ -47,8 +47,16 @@ public class  Book implements  Comparable<Book>{
 
     @Override
     public int compareTo(Book o) {
+        if(this.bookName.compareTo(o.bookName)>0){
+            return 1;
+        }
+        if(this.bookName.compareTo(o.bookName)<0){
+            return -1;
+        }else
         return 0;
     }
+
+
 
     @Override
     public boolean equals(Object o){
